@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARYAN'S TECH HUB</title>
+    <style>
+        :root {
+            --primary: #ff6600;
+            --secondary: #00ffff;
+            --danger: #ff0055;
+            --success: #00ff88;
+            --bg: #0a0a0a;
+            --text: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: hidden;
+        }
+
+        /* Page Container */
+        .page {
+            min-height: 100vh;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 102, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 102, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridScroll 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOut 0.5s ease-out 2s forwards;
+        }
+
+        .loading-text {
+            font-size: 3rem;
+            color: var(--primary);
+            animation: glitchLoad 0.5s infinite;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        @keyframes glitchLoad {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        /* Navigation */
+        .nav-menu {
+         position: fixed;
+         top: 20px;
+         left: 50%;
+         transform: translateX(-50%);
+         z-index: 1000;
+         display: flex;
+         gap: 15px;
+         justify-content: center;
+         align-items: center;
+         flex-wrap: wrap;
+         max-width: 100%; 
+          }
+
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 20px var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+            min-height: 100vh;
+        }
+
+        /* ===== INTRO PAGE ===== */
+        .intro-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+            text-align: center;
+        }
+
+        .glitch {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: bold;
+            color: var(--primary);
+            letter-spacing: 5px;
+            position: relative;
+            text-shadow: 
+                2px 2px 0 var(--secondary),
+                -2px -2px 0 #ff00ff;
+            animation: glitch 3s infinite;
+            margin-bottom: 20px;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitchTop 2s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+            color: var(--secondary);
+        }
+
+        .glitch::after {
+            animation: glitchBottom 1.5s infinite;
+            clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+            color: #ff00ff;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-2px, -2px); }
+        }
+
+        @keyframes glitchTop {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(3px, -2px); }
+            94% { transform: translate(-3px, 2px); }
+        }
+
+        @keyframes glitchBottom {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-3px, 2px); }
+            94% { transform: translate(3px, -2px); }
+        }
+
+        .subtitle {
+            color: #888;
+            letter-spacing: 3px;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            margin-bottom: 40px;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+        }
+
+        .profile-ring {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: rotate 8s linear infinite;
+        }
+
+        .profile-ring::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--secondary);
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text);
+            box-shadow: 0 0 40px rgba(255, 102, 0, 0.5);
+            border: 4px solid var(--bg);
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 20px auto;
+            color: #ccc;
+        }
+
+        .explore-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 50px;
+            font-family: 'Courier New', Courier, monospace;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .explore-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--primary);
+            transition: all 0.6s;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .explore-btn:hover {
+            color: #000;
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        .explore-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* ===== CODING PAGE ===== */
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid rgba(255, 102, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 102, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 102, 0, 0.3);
+            border-color: var(--primary);
+        }
+
+        .card h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .card p {
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            color: #aaa;
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .card li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* ===== HACKER PAGE ===== */
+        .hacker-bg {
+            background: #000;
+        }
+
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .terminal-window {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--success);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.3);
+            position: relative;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--success);
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--danger);
+        }
+
+        .terminal-btn:nth-child(2) { background: #ffaa00; }
+        .terminal-btn:nth-child(3) { background: var(--success); }
+
+        .terminal-content {
+            font-family: 'Courier New', monospace;
+            color: var(--success);
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin: 10px 0;
+            opacity: 0;
+            animation: fadeInLine 0.3s forwards;
+        }
+
+        @keyframes fadeInLine {
+            to { opacity: 1; }
+        }
+
+        .typing {
+            border-right: 2px solid var(--success);
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .glitch-text {
+            animation: textGlitch 0.3s infinite;
+        }
+
+        @keyframes textGlitch {
+            0%, 100% { transform: translate(0); }
+            25% { transform: translate(-2px, 2px); }
+            50% { transform: translate(2px, -2px); }
+            75% { transform: translate(-2px, -2px); }
+        }
+
+        .warning-box {
+            background: rgba(255, 0, 85, 0.1);
+            border: 2px solid var(--danger);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255, 0, 85, 0.6);
+            }
+        }
+
+        /* ===== CONTACT PAGE ===== */
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-card {
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid rgba(255, 102, 0, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            margin: 20px 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 30px var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .fun-facts {
+            margin: 30px 0;
+        }
+
+        .fact-item {
+            background: rgba(255, 102, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .fact-item:hover {
+            background: rgba(255, 102, 0, 0.1);
+            transform: translateX(10px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                top: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 60px 15px 30px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Basketball Animation */
+        .basketball {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6600 0%, #ff8833 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 
+                inset -5px -5px 10px rgba(0, 0, 0, 0.3),
+                0 10px 20px rgba(255, 102, 0, 0.4);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .basketball::before,
+        .basketball::after {
+            content: '';
+            position: absolute;
+            background: #000;
+            height: 2px;
+        }
+
+        .basketball::before {
+            width: 100%;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .basketball::after {
+            height: 100%;
+            width: 2px;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-text">INITIALIZING...</div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-menu">
+        <button class="nav-btn active" onclick="showPage('intro')">Home</button>
+        <button class="nav-btn" onclick="showPage('coding')">Coding & Tech</button>
+        <button class="nav-btn" onclick="showPage('gaming')">Gaming</button>
+        <button class="nav-btn" onclick="showPage('basketball')">Basketball</button>
+        <button class="nav-btn" onclick="showPage('hacker')">Bug Hunter</button>
+        <button class="nav-btn" onclick="showPage('contact')">Contact</button>
+    </div>
+
+    <!-- Background Effects -->
+    <div class="bg-animation"></div>
+    <div class="grid-bg"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- ===== INTRO PAGE ===== -->
+    <div class="page active" id="intro">
+        <div class="container">
+            <div class="intro-content">
+                <h1 class="glitch" data-text="EXPLOI3ER">EXPLOI3ER</h1>
+                <p class="subtitle">System Analyst // Basketballer // Coder-_-</p>
+                
+                <div class="profile-image-container">
+                    <div class="profile-ring"></div>
+                    <div class="profile-image">AJ</div>
+                </div>
+
+                <p class="intro-text">
+                    Hi! I'm Aryan. Welcome to my personal tech & fun hub! 🚀<br>
+                    I love coding, gaming, basketball, and discovering cool tech.<br>
+                    Dive in to explore my world of technology and passion!
+                </p>
+
+                <button class="explore-btn" onclick="showPage('coding')">
+                    EXPLORE MY WORLD →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CODING & TECH PAGE ===== -->
+    <div class="page" id="coding">
+        <div class="container">
+            <h2 class="section-title">💻 Coding & Tech</h2>
+            
+            <div class="content-grid">
+                <div class="card">
+                    <h3>🎯 My Projects</h3>
+                    <p>Check out some of the cool things I've built:</p>
+                    <ul>
+                        <li>Personal Portfolio Website (You're here!)</li>
+                        <li>Bug Tracking System</li>
+                        <li>Basketball Stats Analyzer</li>
+                        <li>Game Score Tracker</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🛠️ Languages I Use</h3>
+                    <p>Currently learning and working with:</p>
+                    <ul>
+                        <li>HTML, CSS, JavaScript</li>
+                        <li>Python for automation</li>
+                        <li>SQL for databases</li>
+                        <li>Git for version control</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Tips I Learned</h3>
+                    <p>Some valuable lessons from my coding journey:</p>
+                    <ul>
+                        <li>Always comment your code</li>
+                        <li>Break problems into smaller parts</li>
+                        <li>Google is your best friend</li>
+                        <li>Test frequently, debug patiently</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🎓 Learning Resources</h3>
+                    <p>Where I learn new skills:</p>
+                    <ul>
+                        <li>FreeCodeCamp</li>
+                        <li>YouTube Tutorials</li>
+                        <li>Stack Overflow Community</li>
+                        <li>GitHub Open Source</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GAMING PAGE ===== -->
+    <div class="page" id="gaming">
+        <div class="container">
+            <h2 class="section-title">🎮 Gaming Zone</h2>
+            
+            <div class="content-grid">
+                <div class="card">
+                    <h3>🔥 Favorite Games</h3>
+                    <p>Games that keep me hooked:</p>
+                    <ul>
+                        <li>Competitive FPS Games</li>
+                        <li>Strategy & Puzzle Games</li>
+                        <li>Open World Adventures</li>
+                        <li>Sports Simulation Games</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Gaming Setup</h3>
+                    <p>My gaming environment:</p>
+                    <ul>
+                        <li>Custom Built PC</li>
+                        <li>Mechanical Keyboard</li>
+                        <li>Gaming Mouse with RGB</li>
+                        <li>High Refresh Rate Monitor</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>⭐ Game Reviews</h3>
+                    <p>Quick thoughts on recent plays:</p>
+                    <p style="margin-top: 15px; color: #aaa;">
+                        "I loved exploring vast open worlds because they give you freedom to create your own adventure. The graphics and storyline make every moment worth it!"
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🏆 Achievements</h3>
+                    <p>Gaming milestones:</p>
+                    <ul>
+                        <li>Completed 20+ Games</li>
+                        <li>Ranked in Top 10% in FPS</li>
+                        <li>100+ Hours in Favorite Game</li>
+                        <li>Built a Gaming Community</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BASKETBALL PAGE ===== -->
+    <div class="page" id="basketball">
+        <div class="container">
+            <h2 class="section-title">🏀 Basketball & Hobbies</h2>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <div class="basketball" style="display: inline-block;"></div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <h3>🏀 Basketball Journey</h3>
+                    <p>My love for the game:</p>
+                    <ul>
+                        <li>Playing since high school</li>
+                        <li>Favorite Position: Point Guard</li>
+                        <li>Love watching NBA games</li>
+                        <li>Practice makes perfect!</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>💪 Favorite Moves</h3>
+                    <p>Signature techniques:</p>
+                    <ul>
+                        <li>Crossover Dribble</li>
+                        <li>Three-Point Shooting</li>
+                        <li>Fast Break Layups</li>
+                        <li>Pick and Roll Plays</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🎵 Music & Chill</h3>
+                    <p>When I'm not coding or playing:</p>
+                    <ul>
+                        <li>Listening to Hip-Hop & Electronic</li>
+                        <li>Creating playlists for workouts</li>
+                        <li>Discovering new artists</li>
+                        <li>Music while coding = productivity boost</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>😴 Life Balance</h3>
+                    <p>Staying healthy and happy:</p>
+                    <ul>
+                        <li>Sleep is crucial (8+ hours!)</li>
+                        <li>Love good food & trying new cuisines</li>
+                        <li>Weekend hoops with friends</li>
+                        <li>Balance tech time with outdoor activities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== HACKER/BUG HUNTER PAGE ===== -->
+    <div class="page hacker-bg" id="hacker">
+        <canvas class="matrix-rain" id="matrix"></canvas>
+        <div class="container">
+            <h2 class="section-title" style="color: var(--success);">
+                <span class="glitch-text">⚡ BUG HUNTER MODE ⚡</span>
+            </h2>
+
+            <div class="warning-box">
+                <h3 style="color: var(--danger); margin-bottom: 10px;">⚠️ ETHICAL HACKING ZONE ⚠️</h3>
+                <p style="color: #fff;">This section is about learning ethical security practices. Always practice safely and legally!</p>
+            </div>
+
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-btn"></div>
+                    <div class="terminal-btn"></div>
+                    <div class="terminal-btn"></div>
+                </div>
+                <div class="terminal-content" id="terminal-output">
+                    <div class="terminal-line" style="animation-delay: 0s;">root@aryan:~$ whoami</div>
+                    <div class="terminal-line" style="animation-delay: 0.3s;">Bug Hunter | Security Enthusiast | System Analyst</div>
+                    <div class="terminal-line" style="animation-delay: 0.6s;">root@aryan:~$ cat skills.txt</div>
+                    <div class="terminal-line" style="animation-delay: 0.9s;">► Web Application Security Testing</div>
+                    <div class="terminal-line" style="animation-delay: 1.2s;">► SQL Injection Detection</div>
+                    <div class="terminal-line" style="animation-delay: 1.5s;">► XSS Vulnerability Analysis</div>
+                    <div class="terminal-line" style="animation-delay: 1.8s;">► Network Security Basics</div>
+                    <div class="terminal-line" style="animation-delay: 2.1s;">root@aryan:~$ ./scan_vulnerabilities</div>
+                    <div class="terminal-line" style="animation-delay: 2.4s;">[+] Scanning... System Secure ✓</div>
+                    <div class="terminal-line typing" style="animation-delay: 2.7s;">root@EXPLOI3ER:~$ _</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <h3 style="color: var(--success);">🛡️ Security Tips</h3>
+                    <ul>
+                        <li>Always practice on legal platforms</li>
+                        <li>Never test on systems without permission</li>
+                        <li>Use VMs for testing environments</li>
+                        <li>Stay updated on latest security news</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: var(--success);">📖 Learning Resources</h3>
+                    <ul>
+                        <li>HackTheBox for practice</li>
+                        <li>OWASP documentation</li>
+                        <li>Cybersecurity YouTube channels</li>
+                        <li>Bug bounty platforms</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: var(--success);">🎯 My Approach</h3>
+                    <p style="color: #ccc;">
+                        "I believe in ethical hacking - using skills to make the internet safer. Every bug found is a potential threat eliminated. Learning security helps me write better, safer code."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONTACT PAGE ===== -->
+    <div class="page" id="contact">
+        <div class="container">
+            <div class="contact-container">
+                <h2 class="section-title">📬 Get In Touch</h2>
+
+                <div class="contact-card">
+                    <h3 style="color: var(--secondary); text-align: center; margin-bottom: 20px;">About Me</h3>
+                    <p style="color: #ccc; line-height: 1.8; text-align: center;">
+                        I'm Aryan Joshi - a passionate coder, gamer, basketball enthusiast, and aspiring security researcher. 
+                        I love building things, solving problems, and learning new technologies. When I'm not coding, 
+                        you'll find me on the basketball court or gaming with friends!
+                    </p>
+
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/_anon_rn/" target="_blank" class="social-btn">
+                            📱 Instagram
+                        </a>
+                        <a href="#" class="social-btn" onclick="alert('Coming soon!'); return false;">
+                            💼 LinkedIn
+                        </a>
+                        <a href="#" class="social-btn" onclick="alert('Coming soon!'); return false;">
+                            🐙 GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <h3 style="color: var(--secondary); margin-bottom: 20px;">🎉 Fun Facts About Me</h3>
+                    <div class="fun-facts">
+                        <div class="fact-item">
+                            <strong style="color: var(--primary);">🍕 Favorite Food:</strong> Pizza and anything spicy!
+                        </div>
+                        <div class="fact-item">
+                            <strong style="color: var(--primary);">😴 Sleep Schedule:</strong> Night owl - best code happens at 2 AM
+                        </div>
+                        <div class="fact-item">
+                            <strong style="color: var(--primary);">🎵 Music Taste:</strong> Hip-hop while coding, electronic while gaming
+                        </div>
+                        <div class="fact-item">
+                            <strong style="color: var(--primary);">☕ Fuel:</strong> Coffee and energy drinks keep me going
+                        </div>
+                        <div class="fact-item">
+                            <strong style="color: var(--primary);">🎯 Life Motto:</strong> "Debug your code, debug your life"
+                        </div>
+                        <div class="fact-item">
+                            <strong style="color: var(--primary);">🏀 Basketball Jersey:</strong> Always wearing #23 in honor of the GOAT
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-card" style="text-align: center;">
+                    <h3 style="color: var(--secondary); margin-bottom: 15px;">💬 Let's Connect!</h3>
+                    <p style="color: #ccc; margin-bottom: 20px;">
+                        Feel free to reach out for collaborations, tech discussions, or just to say hi!
+                    </p>
+                    <p style="color: var(--primary); font-size: 1.1rem;">
+                        📧 Open to new opportunities and projects!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Particle System
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Special handling for hacker page
+            if (pageId === 'hacker') {
+                initMatrix();
+            }
+        }
+
+        // Matrix Rain Effect
+        function initMatrix() {
+            const canvas = document.getElementById('matrix');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * canvas.height;
+            }
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#00ff88';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const char = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            setInterval(draw, 33);
+        }
+
+        // Initialize
+        createParticles();
+
+        // Responsive matrix canvas
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('matrix');
+            if (canvas && document.getElementById('hacker').classList.contains('active')) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        });
+    </script>
+</body>
+</html>
